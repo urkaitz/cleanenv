@@ -42,6 +42,8 @@ const (
 	TagEnvRequired = "env-required"
 	// Flag to specify prefix for structure fields
 	TagEnvPrefix = "env-prefix"
+	// Flag to specify prefix for fields
+	TagEnvRootPrefix = "env-root-prefix"
 )
 
 // Setter is an interface for a custom value setter.
@@ -213,7 +215,6 @@ func readStructMetadata(cfgRoot interface{}) ([]structMeta, error) {
 	for i := 0; i < len(cfgStack); i++ {
 
 		s := reflect.ValueOf(cfgStack[i].Val)
-		sPrefix := cfgStack[i].Prefix
 
 		// unwrap pointer
 		if s.Kind() == reflect.Ptr {
@@ -235,6 +236,8 @@ func readStructMetadata(cfgRoot interface{}) ([]structMeta, error) {
 				layout    *string
 				separator string
 			)
+
+			sPrefix, _ := fType.Tag.Lookup(TagEnvRootPrefix)
 
 			// process nested structure (except of time.Time)
 			if fld := s.Field(idx); fld.Kind() == reflect.Struct {

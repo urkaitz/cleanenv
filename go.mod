@@ -1,4 +1,4 @@
-module github.com/ilyakaznacheev/cleanenv
+module github.com/urkaitz/cleanenv
 
 require (
 	github.com/BurntSushi/toml v0.3.1
