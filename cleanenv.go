@@ -215,6 +215,7 @@ func readStructMetadata(cfgRoot interface{}) ([]structMeta, error) {
 	for i := 0; i < len(cfgStack); i++ {
 
 		s := reflect.ValueOf(cfgStack[i].Val)
+		sPrefix := cfgStack[i].Prefix
 
 		// unwrap pointer
 		if s.Kind() == reflect.Ptr {
@@ -236,8 +237,6 @@ func readStructMetadata(cfgRoot interface{}) ([]structMeta, error) {
 				layout    *string
 				separator string
 			)
-
-			sPrefix, _ := fType.Tag.Lookup(TagEnvRootPrefix)
 
 			// process nested structure (except of time.Time)
 			if fld := s.Field(idx); fld.Kind() == reflect.Struct {
@@ -274,11 +273,13 @@ func readStructMetadata(cfgRoot interface{}) ([]structMeta, error) {
 
 			envList := make([]string, 0)
 
+			sRootPrefix, _ := fType.Tag.Lookup(TagEnvRootPrefix)
+
 			if envs, ok := fType.Tag.Lookup(TagEnv); ok && len(envs) != 0 {
 				envList = strings.Split(envs, DefaultSeparator)
 				if sPrefix != "" {
 					for i := range envList {
-						envList[i] = sPrefix + envList[i]
+						envList[i] = sRootPrefix + sPrefix + envList[i]
 					}
 				}
 			}
