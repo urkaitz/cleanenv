@@ -277,7 +277,7 @@ func readStructMetadata(cfgRoot interface{}) ([]structMeta, error) {
 
 			if envs, ok := fType.Tag.Lookup(TagEnv); ok && len(envs) != 0 {
 				envList = strings.Split(envs, DefaultSeparator)
-				if sPrefix != "" {
+				if sPrefix != "" || sRootPrefix != "" {
 					for i := range envList {
 						envList[i] = sRootPrefix + sPrefix + envList[i]
 					}
